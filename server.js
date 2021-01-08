@@ -45,6 +45,7 @@ app.put("/users/:id", async function updateUser(req, res) {
     let user;
     try {
       user = await User.findById(id);
+      if (user === null) throw new Error();
     } catch (error) {
       console.log(error);
       return res.status(404).json({
@@ -55,7 +56,7 @@ app.put("/users/:id", async function updateUser(req, res) {
     user.email = email;
     user.role = role;
     await user.save();
-    return res.status(200).json(users);
+    return res.status(200).json(user);
   } catch (error) {
     console.log(error);
     return res.status(500).json({
@@ -68,7 +69,8 @@ app.delete("/users/:id", async function deleteUser(req, res) {
   const { id } = req.params;
   try {
     try {
-      await User.findById(id);
+      const user = await User.findById(id);
+      if (user === null) throw new Error();
     } catch (error) {
       console.log(error);
       return res.status(404).json({
@@ -93,6 +95,7 @@ app.get("/users/:id", async function findUser(req, res) {
     let user;
     try {
       user = await User.findById(id);
+      if (user === null) throw new Error();
     } catch (error) {
       console.log(error);
       return res.status(404).json({
