@@ -52,9 +52,9 @@ app.put("/users/:id", async function updateUser(req, res) {
         error: `User with id: ${id} not found`,
       });
     }
-    user.name = name;
-    user.email = email;
-    user.role = role;
+    user.name = name || user.name;
+    user.email = email || user.email;
+    user.role = role || user.role;
     await user.save();
     return res.status(200).json(user);
   } catch (error) {
