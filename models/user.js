@@ -14,7 +14,7 @@ const userSchema = new Schema(
       required: [true, "Email must not be empty."],
       validate: {
         validator: (email) => emailRegex.test(email),
-        message: "Must be a valid email address",
+        message: ({ value }) => `${value} is not a valid email address`,
       },
     },
     role: {
