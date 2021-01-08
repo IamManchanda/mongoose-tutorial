@@ -1,10 +1,27 @@
 const { model, Schema } = require("mongoose");
 
+const emailRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
 const userSchema = new Schema(
   {
-    name: String,
-    email: String,
-    role: String,
+    name: {
+      type: String,
+      required: [true, "Name must not be empty."],
+    },
+    email: {
+      type: String,
+      unique: true,
+      required: [true, "Email must not be empty."],
+      validate: {
+        validator: (email) => emailRegex.test(email),
+        message: "Must be a valid email address",
+      },
+    },
+    role: {
+      type: String,
+      required: [true, "Role must not be empty."],
+      enum: ["user", "admin", "superadmin"],
+    },
   },
   {
     timestamps: true,
