@@ -44,8 +44,7 @@ app.put("/users/:id", async function updateUser(req, res) {
   try {
     let user;
     try {
-      user = await User.findById(id);
-      if (user === null) throw new Error();
+      user = await User.findById(id).orFail();
     } catch (error) {
       console.log(error);
       return res.status(404).json({
@@ -69,8 +68,7 @@ app.delete("/users/:id", async function deleteUser(req, res) {
   const { id } = req.params;
   try {
     try {
-      const user = await User.findById(id);
-      if (user === null) throw new Error();
+      await User.findById(id).orFail();
     } catch (error) {
       console.log(error);
       return res.status(404).json({
@@ -94,8 +92,7 @@ app.get("/users/:id", async function findUser(req, res) {
   try {
     let user;
     try {
-      user = await User.findById(id);
-      if (user === null) throw new Error();
+      user = await User.findById(id).orFail();
     } catch (error) {
       console.log(error);
       return res.status(404).json({
