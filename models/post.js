@@ -1,4 +1,5 @@
 const { model, Schema } = require("mongoose");
+const slugify = require("../utils/slugify");
 
 const postSchema = new Schema(
   {
@@ -17,6 +18,10 @@ const postSchema = new Schema(
     timestamps: true,
   },
 );
+
+postSchema.pre("save", function preSavePostSchema() {
+  this.slug = slugify(this.title);
+});
 
 const Post = model("Post", postSchema);
 
