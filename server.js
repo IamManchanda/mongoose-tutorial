@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const express = require("express");
 const User = require("./models/user");
+const Post = require("./models/post");
 
 const { DATABASE_URI } = process.env;
 
@@ -100,6 +101,41 @@ app.get("/users/:id", async function findUser(req, res) {
       });
     }
     return res.status(200).json(user);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      error: "Something went wrong.",
+    });
+  }
+});
+
+app.post("/posts", async function createPost(req, res) {
+  const { userId, title, body } = req.body;
+
+  try {
+    let user;
+    try {
+      user = await User.findById(userId).orFail();
+    } catch (error) {
+      console.log(error);
+      return res.status(404).json({
+        error: `User with id: ${userId} not found`,
+      });
+    }
+
+    let post;
+    try {
+      post = await Post.create({
+        title,
+        body,
+        user: user.id,
+      });
+    } catch (error) {
+      console.log(error);
+      return res.status(400).json(error);
+    }
+
+    return res.status(200).json(post);
   } catch (error) {
     console.log(error);
     return res.status(500).json({
